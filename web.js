@@ -3,9 +3,9 @@ var express = require('express');
 var fs = require('fs');
 
 var app = express.createServer(express.logger());
-
+fs.
 app.get('/', function(request, response) {
-response.send('perdon heroku, pero eres un mamon de mierda');
+response.send(fs.readFileSync(index.html).toString()); 
 });
 
 var port = process.env.PORT || 5000;
