@@ -58,11 +58,13 @@ var clone = function(fn) {
 if(require.main == module) {
     program
     .option('c, --checks <check_file>', '~/prueba2/bitstarter/checks.json', clone(assertFileExists), CHECKSFILE_DEFAULT)
-    .option('-f, --file <html_file>', '~/prueba2/bitstarter/index.html', clone(assertFileExists), HTMLFILE_DEFAULT)
+    .option('-f, --file <html_file>', 'Path to file', clone(assertFileExists), HTMLFILE_DEFAULT) 
     .option('-u, --url <url>', 'URL to parse', clone(URLtoString), HTMLFILE_DEFAULT) 
     .parse(process.argv);
-    
-    var checkJson = checkHtmlFile('tmp.html', program.checks);
+    if(program.file != HTMLFILE_DEFAULT) { var checkJson = checkHtmlFile(program.file, program.checks);}
+    else if (program.url != HTMLFILE_DEFAULT) { var checkJson = checkHtmlFile('tmp.html', program.checks);}
+    else {console.log("No file/URL? OK... :(");}
+  
     var outJson = JSON.stringify(checkJson, null, 4);
     console.log(outJson);
 } else {
