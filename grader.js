@@ -15,11 +15,22 @@ var assertFileExists = function(infile) {
     return instr;
 };
 
+var RestoFile = function(res) {
+    var reqResult = "tmp.html";
+    fs.writeFileSync(reqResult, res);
+    return reqResult;
+};
+
+
 var URLtoString = function(url) {
-    rest.get(url).on('complete', function(result) {
+    rest.get(url).on('success', function(result) {
     if (result instanceof Error) {
     console.log('Error: ' + result.message);
-	} else { return result.toString(); }
+	} else { 
+	    console.log(result);
+//	    console.log(result.toString());
+	    RestoFile(result);
+	    return result.toString(); }
     });
 };
 
@@ -50,14 +61,21 @@ if(require.main == module) {
     program
     .option('c, --checks <check_file>', '~/prueba2/bitstarter/checks.json', clone(assertFileExists), CHECKSFILE_DEFAULT)
     .option('-f, --file <html_file>', '~/prueba2/bitstarter/index.html', clone(assertFileExists), HTMLFILE_DEFAULT)
-    .option('u, --url <url>', 'URL to parse') 
+    .option('-u, --url <url>', 'URL to parse') 
     .parse(process.argv);
+var urlS = program.url.toString();
+URLtoString(urlS);    
 
-    var checkJson = checkHtmlFile(program.file, program.checks);
+
+    var checkJson = checkHtmlFile('tmp.html', program.checks);
     var outJson = JSON.stringify(checkJson, null, 4);
     console.log(outJson);
 } else {
     exports.checkHtmlFile = checkHtmlFile;
 }
 
-		      
+/*
+rest.get('https://pechuga.herokuapp.com').on('complete', function(result){console.log(":D"+result.toString());});
+
+console.log('osea que pedo');
+*/
